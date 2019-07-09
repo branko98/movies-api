@@ -21,4 +21,9 @@ class Movie extends Model
         'duration',
         'releaseDate',
     ];
+
+    public static function filter($title, $skip, $take)
+   {
+       return self::where('title', 'LIKE', '%'.$title .'%')->skip($skip)->take($take)->get();
+   }
 }

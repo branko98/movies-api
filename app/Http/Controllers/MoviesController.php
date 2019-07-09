@@ -13,24 +13,31 @@ class MoviesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public static function index(Request $request)
     {
-        \Log::info($request->input('title'));
         $title = $request->input('title');
-        if(!$title){
-            $movies = Movie::all();
-        }else {
-            $movies  = $this->search($title);
+        $take = $request->input('take');
+        $skip = $request->input('skip');
+
+        if ($title) {
+            return Movie::filter($title, $skip, $take);
+        } else {
+            return Movie::skip($skip)->take($take)->get();
         }
-        
-        return $movies;
     }
 
-    public function search($title)
-    {
-        $movie = Movie::where('title', 'LIKE', '%'.$title.'%')->get();
-        return $movie;
-    }
+    // public function search($title = null, $take = null, $skip = null)
+    // {
+    //     if($take && $skip) {
+    //         return DB::table('movies')
+    //         ->where('title', 'LIKE', '%'.$title.'%')
+    //         ->skip($skip)
+    //         ->take($take)
+    //         ->get();
+    //     }else{
+    //         return Movie::where('title', 'LIKE', '%'.$title.'%')->get();
+    //     }
+    // }
 
     /**
      * Show the form for creating a new resource.
